@@ -1,3 +1,6 @@
 import { Signature } from "viem";
 
-export type GetSigReturn = Signature;
+export type GetSigReturn = {
+  message: any;
+  signature: Signature;
+};

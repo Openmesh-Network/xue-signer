@@ -65,15 +65,16 @@ export function registerRoutes(app: Express, storage: Storage) {
         { name: "claimBefore", type: "uint32" },
       ],
     } as const;
+    const message = {
+      receiver: receiver,
+      codeHash: keccak256(toBytes(code)),
+      claimBefore: claimBefore,
+    } as const;
     const signature = await account.signTypedData({
       domain: domain,
       types: types,
       primaryType: "Claim",
-      message: {
-        receiver: receiver,
-        codeHash: keccak256(toBytes(code)),
-        claimBefore: claimBefore,
-      },
+      message: message,
     });
 
     res.end(JSON.stringify(hexToSignature(signature), replacer));
