@@ -77,6 +77,14 @@ export function registerRoutes(app: Express, storage: Storage) {
       message: message,
     });
 
-    res.end(JSON.stringify(hexToSignature(signature), replacer));
+    res.end(
+      JSON.stringify(
+        {
+          message: message,
+          signature: hexToSignature(signature),
+        },
+        replacer
+      )
+    );
   });
 }
