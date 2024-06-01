@@ -13,7 +13,7 @@ function malformedRequest(res: Response, error: string): void {
 }
 
 export function registerRoutes(app: Express, storage: Storage) {
-  const basePath = "/remote-signer/";
+  const basePath = "/xue-signer/";
   app.use(json());
 
   // Try to get a signature from the server
@@ -37,12 +37,12 @@ export function registerRoutes(app: Express, storage: Storage) {
     const codeInfo = codes[code];
     if (!codeInfo) {
       res.statusCode = 404;
-      return res.end("Code not found");
+      return res.end("Invalid code.");
     }
 
     if (codeInfo.expiry < new Date()) {
       res.statusCode = 410;
-      return res.end("Code has expired");
+      return res.end("Code has expired.");
     }
 
     const claimBefore = Math.round(new Date().getTime() / 1000) + 30 * 24 * 60 * 60; // 1 month from now
