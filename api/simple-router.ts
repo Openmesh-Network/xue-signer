@@ -6,6 +6,7 @@ import { sepolia } from "viem/chains";
 import { Storage } from "../types/storage.js";
 import { replacer, reviver } from "../utils/json.js";
 import { XnodeUnitEntitlementClaimerContract } from "../contracts/XnodeUnitEntitlementClaimer.js";
+import axios from "axios";
 
 function malformedRequest(res: Response, error: string): void {
   res.statusCode = 400;
@@ -31,6 +32,23 @@ export function registerRoutes(app: Express, storage: Storage) {
     }
     if (!isAddress(receiver)) {
       return malformedRequest(res, "receiver is not a valid address");
+    }
+
+    const recaptcha = data.recaptcha;
+    if (typeof recaptcha !== "string") {
+      return malformedRequest(res, "recaptcha is not a string");
+    }
+
+    const captchaVerification = await axios({
+      method: "post",
+      url: "https://www.google.com/recaptcha/api/siteverify",
+      params: {
+        secret: process.env.RECAPTCHA_SECRET,
+        response: recaptcha,
+      },
+    });
+    if (!captchaVerification.data?.success) {
+      return malformedRequest(res, "recaptcha does not pass verification");
     }
 
     const codes = await storage.codes.get();

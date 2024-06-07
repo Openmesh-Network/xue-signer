@@ -1,5 +1,5 @@
 export const XnodeUnitEntitlementClaimerContract = {
-  address: "0x586204a1173DaE5D3Fdc25d441101918f28CaaEe",
+  address: "0xd5bcB7d3861050f19563bf8C7aD243c07Cf840FE",
   abi: [
     {
       type: "constructor",
