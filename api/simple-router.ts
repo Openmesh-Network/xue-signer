@@ -1,5 +1,5 @@
 import { Express, Response, json } from "express";
-import { hexToSignature, isAddress, isHex, keccak256, toBytes } from "viem";
+import { isAddress, isHex, keccak256, parseSignature, toBytes } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { mainnet } from "viem/chains";
 
@@ -99,7 +99,7 @@ export function registerRoutes(app: Express, storage: Storage) {
       JSON.stringify(
         {
           message: message,
-          signature: hexToSignature(signature),
+          signature: parseSignature(signature),
         },
         replacer
       )
