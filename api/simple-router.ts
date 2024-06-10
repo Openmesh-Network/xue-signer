@@ -1,7 +1,7 @@
 import { Express, Response, json } from "express";
 import { hexToSignature, isAddress, isHex, keccak256, toBytes } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { sepolia } from "viem/chains";
+import { mainnet } from "viem/chains";
 
 import { Storage } from "../types/storage.js";
 import { replacer, reviver } from "../utils/json.js";
@@ -73,7 +73,7 @@ export function registerRoutes(app: Express, storage: Storage) {
     const domain = {
       name: "Xnode Unit Entitlement Claimer",
       version: "1",
-      chainId: sepolia.id,
+      chainId: mainnet.id,
       verifyingContract: XnodeUnitEntitlementClaimerContract.address,
     } as const;
     const types = {
