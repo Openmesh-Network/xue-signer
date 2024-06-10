@@ -4,6 +4,7 @@ import storageManager from "node-persist";
 import { PersistentJson } from "./utils/persistent-json.js";
 import { CodesStorage, Storage } from "./types/storage.js";
 import { registerRoutes } from "./api/simple-router.js";
+import { readFile } from "fs/promises";
 
 async function start() {
   const loadEnvResult = loadEnv();
@@ -45,7 +46,6 @@ async function start() {
     try {
       const command = input.toString();
       if (command.startsWith("addCode ")) {
-        // In case the current USD value is not representative (weird price spike)
         const args = command.split(" ").slice(1);
         const code = args[0].trim();
         storage.codes
@@ -58,6 +58,25 @@ async function start() {
           })
           .then(() => console.log("Code added!"))
           .catch((err) => console.error(`Error while executing add code: ${err}`));
+      } else if (command.startsWith("addCodesFromFile ")) {
+        const args = command.split(" ").slice(1);
+        const file = args[0].trim();
+
+        const expiry = new Date();
+        expiry.setTime(expiry.getTime() + 7 * 24 * 60 * 60 * 1000);
+        readFile(file, { encoding: "utf-8" }).then((fileContent) => {
+          const fileCodes = fileContent.split("\n").filter((str) => str);
+          storage.codes
+            .update((codes) => {
+              for (let i = 0; i < fileCodes.length; i++) {
+                codes[fileCodes[i]] = {
+                  expiry: expiry,
+                };
+              }
+            })
+            .then(() => console.log(`${fileCodes.length} codes added!`))
+            .catch((err) => console.error(`Error while adding code: ${err}`));
+        });
       }
     } catch (err) {
       console.error(`Error interpreting command: ${err}`);
