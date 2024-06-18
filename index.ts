@@ -77,6 +77,17 @@ async function start() {
             .then(() => console.log(`${fileCodes.length} codes added!`))
             .catch((err) => console.error(`Error while adding code: ${err}`));
         });
+      } else if (command.startsWith("extendCodes ")) {
+        const args = command.split(" ").slice(1);
+        const days = Number(args[0].trim());
+        storage.codes
+          .update((codes) => {
+            Object.values(codes).forEach((code) => {
+              code.expiry = new Date(code.expiry.getTime() + days * 24 * 60 * 60 * 1000);
+            });
+          })
+          .then(() => console.log("Codes extended!"))
+          .catch((err) => console.error(`Error while executing extend codes: ${err}`));
       }
     } catch (err) {
       console.error(`Error interpreting command: ${err}`);
