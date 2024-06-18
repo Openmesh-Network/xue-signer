@@ -53,7 +53,7 @@ async function start() {
             const expiry = new Date();
             expiry.setTime(expiry.getTime() + 7 * 24 * 60 * 60 * 1000);
             codes[code] = {
-              expiry: expiry,
+              expiry: expiry.toISOString(),
             };
           })
           .then(() => console.log("Code added!"))
@@ -70,7 +70,7 @@ async function start() {
             .update((codes) => {
               for (let i = 0; i < fileCodes.length; i++) {
                 codes[fileCodes[i]] = {
-                  expiry: expiry,
+                  expiry: expiry.toISOString(),
                 };
               }
             })
@@ -83,7 +83,7 @@ async function start() {
         storage.codes
           .update((codes) => {
             Object.values(codes).forEach((code) => {
-              code.expiry = new Date(code.expiry.getTime() + days * 24 * 60 * 60 * 1000);
+              code.expiry = new Date(new Date(code.expiry).getTime() + days * 24 * 60 * 60 * 1000).toISOString();
             });
           })
           .then(() => console.log("Codes extended!"))

@@ -58,7 +58,7 @@ export function registerRoutes(app: Express, storage: Storage) {
       return res.end("Invalid code.");
     }
 
-    if (codeInfo.expiry < new Date()) {
+    if (new Date(codeInfo.expiry) < new Date()) {
       res.statusCode = 410;
       return res.end("Code has expired.");
     }
