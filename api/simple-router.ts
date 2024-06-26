@@ -14,7 +14,7 @@ function malformedRequest(res: Response, error: string): void {
 }
 
 export function registerRoutes(app: Express, storage: Storage) {
-  const basePath = "/xue-signer/";
+  const basePath = process.env.TESTNET ? "/xue-signer-testnet/" : "/xue-signer/";
   app.use(json());
 
   // Try to get a signature from the server
